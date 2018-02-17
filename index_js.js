@@ -1,4 +1,5 @@
-// select the areas from the html document
+// setting variables 
+    // select the areas from the html document
 var $table_row = document.querySelector("tbody.PROOF_OF_ALIENS");
 var $renderedRow = $table_row.querySelectorAll("tr");
     // get user inputs for the search filter
@@ -9,12 +10,14 @@ var $input_country = document.querySelector('#search_country');
 var $input_shape = document.querySelector('#search_shape');
     // search button submit
 var $search_button = document.querySelector("#submit_search");
+    //show all button 
+var $showAll_button = document.querySelector("#show_All");
+    // add eventListener to search button and show all button when clicked
+$search_button.addEventListener("click", search_multi);
+$showAll_button.addEventListener("click", show_all);
 
-// add eventListener to search button when clicked
-$search_button.addEventListener("click", search_all);
-
-// Search date function
-function search_all(){
+// Function: Search multiple filters (or just one filter or even none at all) 
+function search_multi(){
     // Format the user's search by removing leading and trailing whitespace.
     var inputDate = $input_date.value.trim();
     var inputCity =  $input_city.value.trim().toLowerCase();
@@ -40,31 +43,42 @@ function search_all(){
     the following criteria based on the table columns: 
     ***/ 
         // checking if any input vars have no value
-        var filteredArray = {"datetime" : inputDate, "city" : inputCity, "state" : inputState, 
+        var filteredInputs = {"datetime" : inputDate, "city" : inputCity, "state" : inputState, 
             "country" : inputCountry, "shape" : inputShape};
-        for (var key in filteredArray){
+        for (var key in filteredInputs){
             // if has no value, then delete
-            if (filteredArray[key] == ""){
-                delete filteredArray[key];
+            if (filteredInputs[key] == ""){
+                delete filteredInputs[key];
             }
         } 
-    console.log(filteredArray);
+    console.log(filteredInputs);
 
-    filteredDataSet = dataSet.filter(function(item) { //filters dataSet from data.js using a function
-        for (key in filteredArray){ // for each key in the filteredArray object
-            if(item[key] === undefined || item[key] != filteredArray[key]) /* does not return the 
-            current item from dataSet if item at [key] is undefined or if the values from dataSet and filteredArray 
-            don't match at the keys*/
-                return false;
-        }
-        return true; /* if not(key-values do not match), then the item passes the filter and 
-        is included in the filteredDataSet array */
-        
-        console.log(filteredDataSet);    
-    });
-    console.log(filteredDataSet.length);
-    render_table(filteredDataSet);
-} // end of search_all(); 
+    if (Object.keys(filteredInputs).length != 0){ // if filteredArray is not empty
+        filteredDataSet = dataSet.filter(function(item) { //filters dataSet from data.js using a function
+            for (key in filteredInputs){ // for each key in the filteredArray object
+                if(item[key] === undefined || item[key] == "" || item[key].trim().toLowerCase() != filteredInputs[key]) 
+                /* does not return the current item from dataSet if item at [key] is undefined or nothing
+                or if the values from dataSet and filteredArray don't match at the keys*/
+                    return false;
+            }
+            return true; /* if not(key-values do not match), then the item passes the filter and 
+            is included in the filteredDataSet array */  
+        });
+        console.log(filteredDataSet.length);
+        render_table(filteredDataSet);
+    } 
+    else { //if length of keys in filteredInputs is == 0
+        filteredDataSet = [];
+        render_table(filteredDataSet);
+    }
+
+} // end of search_multi(); 
+
+
+// Function: Show all rows 
+function show_all(){
+    render_table(dataSet);
+} // end show_all();
 
 function render_table(some_data){
 /*** calls dataSet from data.js. Loop through and insert rows first ***/ 
@@ -85,7 +99,6 @@ function render_table(some_data){
         var row = $table_row.insertRow(i);
         var keys = Object.keys(data) //returns the keys for each "entry" in the object
         var col_length = keys.length - 1;
-        //console.log(i + "/" + some_data.length); //tracking progress of the loop
         /* loop through columns and sets columns, excluding "durationMinutes" data */
         for (j=0; j<col_length; j++){
             var cell = row.insertCell(j);

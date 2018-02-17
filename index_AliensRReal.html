@@ -40,11 +40,11 @@
                 </div>
                 <div class="col-md-2">
                     <label for="search_state">SEARCH BY STATE</label>
-                    <input type="text" class="form-control" id="search_state" placeholder="dc, al, ca, etc...">
+                    <input type="text" class="form-control" id="search_state" placeholder="DC, Al, Ca, etc...">
                 </div>
                 <div class="col-md-2">
                     <label for="search_country">SEARCH BY COUNTRY</label>
-                    <input type="text" class="form-control" id="search_country" placeholder="us or ca">
+                    <input type="text" class="form-control" id="search_country" placeholder="US, CA, or AU">
                 </div>
                 <div class="col-md-2">
                     <label for="search_shape">SEARCH BY SHAPE OF UFO</label>
@@ -53,25 +53,22 @@
                 <div class="col-md-2">
                 </div>
             </div>
-            <input type="submit" id="submit_search" value="Search">
-        </div>
-
-        <!-- Just for fun: Xfiles theme link on youtube -->
-        <div class="row">
-            <div class ="col-md-6">
-                </br>
-                <audio controls>
-                <!--audio controls autoplay-->
-                    <source src="style/X - Files Theme Full (Illuminati Song).mp3" type="audio/mpeg">
-                </audio>
-                <p> (source: 
-                    <a href="https://archive.org/details/XFilesThemeFullIlluminatiSong"> 
-                        https://archive.org/details/XFilesThemeFullIlluminatiSong
-                    </a>
-                    )
-                </p>
+            <!-- regular search button -->
+            <div id="searchBtn" class="row">
+                <div class="col-md-12">
+                    <input type="submit" id="submit_search" value="Search">
+                </div>
             </div>
-            <div class = "col-md-6">
+            <!-- Show all rows button --> 
+            <div id="showAllBtn_row" class="row">
+                <div class="col-md-12">
+                    <button id="show_All" type="button">
+                        Show All Rows
+                    </button> 
+                    <p> 
+                        (allow a minute to render on the page)
+                    </p>
+                </div>
             </div>
         </div>
 
@@ -107,12 +104,39 @@
             </div>
         </div> <!-- Ends table section  -->
 
+        <!-- Pagination -->
+        <ul class="pagination">
+            <li class="page-item"><a class="page-link" href="#">Previous</a></li>
+
+            <li class="page-item"><a class="page-link" href="#">Next</a></li>
+        </ul>
+
+        <!-- footer banner -->
         <div id="footer" class="row">
             <div class="col-md-12">
                 <h3 class="banner_text"> <b> I <mark>WANT</mark> TO <mark>BELIEVE</mark> </b>
                 </h3>
             </div>
         </div>
+
+         <!-- Just for fun: Xfiles theme link -->
+         <div id="xfilesAudio" class="row">
+                <div class ="col-md-6">
+                    <!-- audio controls autoplay loop -->
+                    <audio controls>
+                        <source src="style/X - Files Theme Full (Illuminati Song).mp3" type="audio/mpeg">
+                            your browser does not support Html5
+                    </audio>
+                    <p> (source: 
+                        <a href="https://archive.org/details/XFilesThemeFullIlluminatiSong"> 
+                            https://archive.org/details/XFilesThemeFullIlluminatiSong
+                        </a>
+                        )
+                    </p>
+                </div>
+                <div class = "col-md-6">
+                </div>
+            </div>
     </div> <!-- Ends container -->
     <script src="js/data.js" type="text/javascript"></script>
     <script src="index_js.js" type="text/javascript"></script>

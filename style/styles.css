@@ -11,10 +11,15 @@ div.banner {
     text-align: center;
 }
 
-#search_date{
-
+#searchBtn {
+    padding-top: 20px;
+    padding-bottom: 20px;
 }
 
+#showAllBtn_row {
+    padding-top: 50px;
+    padding-bottom: 20px;
+}
 
 #footer {
     background-color: black;
@@ -22,3 +27,6 @@ div.banner {
     padding-bottom: 20px;
 }
 
+#xfilesAudio {
+    padding-top:100px;
+}

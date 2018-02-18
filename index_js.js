@@ -8,6 +8,8 @@ var $input_city = document.querySelector("#search_city");
 var $input_state = document.querySelector('#search_state');
 var $input_country = document.querySelector('#search_country');
 var $input_shape = document.querySelector('#search_shape');
+    // pagination
+var $result_page = document.querySelector(".pagination");
     // search button submit
 var $search_button = document.querySelector("#submit_search");
     //show all button 
@@ -28,16 +30,6 @@ function search_multi(){
     console.log(inputDate);
     
     // *** Set filtered dates to an array of all values which match the filter ***
-
-    //      Next section has a better method of doing this, along with filtering multiple criteria.
-    /* var filteredDataSet = [];
-    for (i=0; i<dataSet.length; i++){
-        var datetime = dataSet[i].datetime;
-        if (datetime == inputDate) {
-        filteredDataSet.push(dataSet[i]);
-        }
-    } */
-
     /*** 
     Using the filter function, user can set multiple filters and search for UFO sightings using 
     the following criteria based on the table columns: 
@@ -65,11 +57,14 @@ function search_multi(){
             is included in the filteredDataSet array */  
         });
         console.log(filteredDataSet.length);
-        render_table(filteredDataSet);
+        
+        render_pagination(some_data=filteredDataSet, perPageCt = 50, page_num=1);
+        paginate_data(some_data=filteredDataSet, perPageCt = 50, page_num=1);
     } 
     else { //if length of keys in filteredInputs is == 0
         filteredDataSet = [];
         render_table(filteredDataSet);
+        render_pagination(filteredDataSet);
     }
 
 } // end of search_multi(); 
@@ -77,8 +72,62 @@ function search_multi(){
 
 // Function: Show all rows 
 function show_all(){
-    render_table(dataSet);
+    render_pagination(dataSet, perPageCt=500, 0);
+    paginate_data(some_data=dataSet, perPageCt=100, page_num=0);
 } // end show_all();
+
+
+// Pagination without use of jquery 
+// render the pagination lists
+// @TODO: find a way to get user's desired per page Ct (how many results shown at once) or set it
+
+function render_pagination(some_data, perPageCt=50, page_num=1) { // parameters: list of objects and page number to start
+    // just making sure the parameters do not default to the default values
+    var some_data = some_data;
+    var perPageCt = perPageCt;
+    var page_num = page_num;
+
+    // clear all previous paginations:
+    while($result_page.firstChild){
+        $result_page.removeChild($result_page.firstChild);
+    }
+
+    quotient = Math.ceil(some_data.length / perPageCt); // get total # of pages needed to encompass all data.
+    for (var i=0; i<quotient; i++) {
+        var newPageLink = document.createElement('button');
+        newPageLink.setAttribute("class", "page_button");
+        var currentPageNum = i + 1;
+        newPageLink.innerText = currentPageNum;
+
+        $result_page.appendChild(newPageLink); // apend new pagination under the pagination <ul> 
+    }
+     // add eventListener for each page button 
+    var page_links = $result_page.querySelectorAll(".page_button");
+    for (var i=0; i < page_links.length; i++){
+        // get current number from the button
+        current_page_num = page_links[i].innerText;
+        // add event listener for each button
+        page_links[i].addEventListener("click", function(){ // to pass multiple functions with custom params
+            paginate_data(some_data=some_data, perPageCt, page_num=current_page_num);
+            render_pagination(some_data=some_data, perPageCt, page_num=current_page_num);
+        })
+    } 
+
+}
+
+// calculate page number, slice data accordingly, and call render_table() on the new data. 
+function paginate_data(some_data, perPageCt=50, page_num=1) { // parameters: object, number of results displayed per page, page number    
+    
+    startIndex = (page_num - 1) * perPageCt; 
+    endIndex =  startIndex + perPageCt; 
+    
+    var slicedArray = some_data.slice(startIndex, endIndex); // Can slice object by index, 
+    // but may return [Object{}, Object{}, ...], which could cause problems when passing into render_table 
+    render_table(slicedArray); 
+    console.log(page_num);
+    console.log("start: " + startIndex + "; end: " + endIndex);
+}
+
 
 function render_table(some_data){
 /*** calls dataSet from data.js. Loop through and insert rows first ***/ 
@@ -114,5 +163,8 @@ function render_table(some_data){
     }
 }
 
-// Render the table for the first time on page load
-// render_table(dataSet)
+/*
+// pagination with jquery
+$(document).ready(function() {
+    $('#main').DataTable();
+} ); */

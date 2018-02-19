@@ -18,6 +18,9 @@ var $showAll_button = document.querySelector("#show_All");
 $search_button.addEventListener("click", search_multi);
 $showAll_button.addEventListener("click", show_all);
 
+var page = 1;
+var records_per_page = 50; 
+
 // Function: Search multiple filters (or just one filter or even none at all) 
 function search_multi(){
     // Format the user's search by removing leading and trailing whitespace.
@@ -45,7 +48,7 @@ function search_multi(){
         } 
     console.log(filteredInputs);
 
-    if (Object.keys(filteredInputs).length != 0){ // if filteredArray is not empty
+    if (Object.keys(filteredInputs).length != 0){ // if filtered object is not empty
         filteredDataSet = dataSet.filter(function(item) { //filters dataSet from data.js using a function
             for (key in filteredInputs){ // for each key in the filteredArray object
                 if(item[key] === undefined || item[key] == "" || item[key].trim().toLowerCase() != filteredInputs[key]) 
@@ -57,9 +60,8 @@ function search_multi(){
             is included in the filteredDataSet array */  
         });
         console.log(filteredDataSet.length);
-        
-        render_pagination(some_data=filteredDataSet, perPageCt = 50, page_num=1);
         paginate_data(some_data=filteredDataSet, perPageCt = 50, page_num=1);
+        render_pagination(some_data=filteredDataSet, perPageCt = 50, page_num=1);
     } 
     else { //if length of keys in filteredInputs is == 0
         filteredDataSet = [];
@@ -72,8 +74,8 @@ function search_multi(){
 
 // Function: Show all rows 
 function show_all(){
-    render_pagination(dataSet, perPageCt=500, 0);
-    paginate_data(some_data=dataSet, perPageCt=100, page_num=0);
+    render_pagination(dataSet, perPageCt=500, page_num=1);
+    paginate_data(some_data=dataSet, perPageCt=100, page_num=1);
 } // end show_all();
 
 
@@ -92,32 +94,40 @@ function render_pagination(some_data, perPageCt=50, page_num=1) { // parameters:
         $result_page.removeChild($result_page.firstChild);
     }
 
-    quotient = Math.ceil(some_data.length / perPageCt); // get total # of pages needed to encompass all data.
-    for (var i=0; i<quotient; i++) {
+    var quotient = Math.ceil(some_data.length / perPageCt); // get total # of pages needed to encompass all data.
+   
+    for (var i=0; i<quotient; i++) { // create buttons and append under "pagination" <ul>. 
         var newPageLink = document.createElement('button');
-        newPageLink.setAttribute("class", "page_button");
         var currentPageNum = i + 1;
         newPageLink.innerText = currentPageNum;
-
-        $result_page.appendChild(newPageLink); // apend new pagination under the pagination <ul> 
-    }
-     // add eventListener for each page button 
+        newPageLink.setAttribute("class", "page_button");
+        newPageLink.setAttribute("id", currentPageNum);
+        // add event listener for each button
+        newPageLink.addEventListener("click", function (){ // to pass multiple functions with custom params
+            var current_button = this.id;
+            console.log("button clicked: " + current_button);
+            paginate_data(some_data=some_data, perPageCt, page_num=current_button);
+        });
+        $result_page.appendChild(newPageLink); // append new pagination under the pagination <ul> 
+        
+    }   
+     /* add eventListener for each page button 
     var page_links = $result_page.querySelectorAll(".page_button");
     for (var i=0; i < page_links.length; i++){
         // get current number from the button
-        current_page_num = page_links[i].innerText;
+        current_page_num = Number(page_links[i].innerText);
+        console.log(current_page_num);
         // add event listener for each button
         page_links[i].addEventListener("click", function(){ // to pass multiple functions with custom params
             paginate_data(some_data=some_data, perPageCt, page_num=current_page_num);
-            render_pagination(some_data=some_data, perPageCt, page_num=current_page_num);
-        })
+            //render_pagination(some_data=some_data, perPageCt, page_num=current_page_num);
+        });
     } 
-
+    */
 }
 
 // calculate page number, slice data accordingly, and call render_table() on the new data. 
 function paginate_data(some_data, perPageCt=50, page_num=1) { // parameters: object, number of results displayed per page, page number    
-    
     startIndex = (page_num - 1) * perPageCt; 
     endIndex =  startIndex + perPageCt; 
     

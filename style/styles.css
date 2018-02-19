@@ -12,13 +12,24 @@ div.banner {
 }
 
 #searchBtn {
-    padding-top: 20px;
-    padding-bottom: 20px;
+    padding-top: 25px;
+    padding-bottom: 15px;
 }
 
 #showAllBtn_row {
-    padding-top: 50px;
+    padding-top: 15px;
     padding-bottom: 20px;
+}
+
+/* makes pagination at the end into a scrolling list */
+ul.pagination {
+
+    white-space:nowrap;
+    overflow: auto;
+    overflow-y: hidden;
+}
+.btn {
+    display:inline-block;
 }
 
 #footer {

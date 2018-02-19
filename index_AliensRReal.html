@@ -37,23 +37,23 @@
         <div class="form-group">
             <div class="row">
                 <div class="col-md-2">
-                    <label for="search_date">SEARCH BY DATE/TIME</label>
+                    <label for="search_date">FILTER BY DATE/TIME</label>
                     <input type="text" class="form-control" id="search_date" placeholder="M/D/YYYY">
                 </div>
                 <div class="col-md-2">
-                    <label for="search_city">SEARCH BY CITY</label>
+                    <label for="search_city">FILTER BY CITY</label>
                     <input type="text" class="form-control" id="search_city" placeholder="city name">
                 </div>
                 <div class="col-md-2">
-                    <label for="search_state">SEARCH BY STATE</label>
+                    <label for="search_state">FILTER BY STATE</label>
                     <input type="text" class="form-control" id="search_state" placeholder="DC, Al, Ca, etc...">
                 </div>
                 <div class="col-md-2">
-                    <label for="search_country">SEARCH BY COUNTRY</label>
+                    <label for="search_country">FILTER BY COUNTRY</label>
                     <input type="text" class="form-control" id="search_country" placeholder="US, CA, or AU">
                 </div>
                 <div class="col-md-2">
-                    <label for="search_shape">SEARCH BY SHAPE OF UFO</label>
+                    <label for="search_shape">FILTER BY SHAPE OF UFO</label>
                     <input type="text" class="form-control" id="search_shape" placeholder="light, fireball, circle, etc...">
                 </div>
                 <div class="col-md-2">
@@ -71,9 +71,6 @@
                     <button id="show_All" type="button">
                         Show All Rows
                     </button> 
-                    <p> 
-                        (allow a minute to render on the page)
-                    </p>
                 </div>
             </div>
         </div>
@@ -90,6 +87,10 @@
         </div>
         
         <!-- table of ALIEN SIGHTINGS!! --> 
+        <div class="row">
+            <div id="page_progress" class="col-md-12">
+            </div>
+        </div>
         <div class="row">
             <div class="col-md-12">
                 <table id="main" class="table table-striped">
@@ -111,20 +112,25 @@
         </div> <!-- Ends table section  -->
 
         <!-- Pagination -->
+        <!-- display the page progress ("page # out of #") -->
         <div class="row">
             <div id="page_progress" class="col-md-12">
             </div>
         </div>
         <ul class="pagination">
-            <!-- example code. Maybe delete later -->
-            <li class="next"><a class="page-link" href="#">Next</a></li>
+            <!-- example code. Maybe delete later 
+            <li class="next"><button class="page-link" href="#">Next</button></li>
+            -->
         </ul>
 
         <!-- footer banner -->
         <div id="footer" class="row">
             <div class="col-md-12">
-                <h3 class="banner_text"> <b> I <mark>WANT</mark> TO <mark>BELIEVE</mark> </b>
-                </h3>
+                <a id="to_top" href="#" role="button">
+                    <h3 class="banner_text"> <b> I <mark>WANT</mark> TO <mark>BELIEVE</mark> </b>
+                    </h3>
+                </a>
+                
             </div>
         </div>
     </div> <!-- Ends container -->
@@ -133,7 +139,7 @@
     <div id="xfilesAudio" class="row">
         <div class ="col-md-6">
             <!-- audio controls autoplay loop -->
-            <audio controls>
+            <audio controls loop>
                 <source src="style/X - Files Theme Full (Illuminati Song).mp3" type="audio/mpeg">
                     your browser does not support Html5
             </audio>

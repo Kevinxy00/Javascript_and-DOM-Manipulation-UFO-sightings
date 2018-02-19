@@ -12,12 +12,15 @@ var $input_shape = document.querySelector('#search_shape');
 var $result_page = document.querySelector(".pagination");
     // search button submit
 var $search_button = document.querySelector("#submit_search");
-    //show all button 
+    // the show-all button 
 var $showAll_button = document.querySelector("#show_All");
     // add eventListener to search button and show all button when clicked
 $search_button.addEventListener("click", search_multi);
 $showAll_button.addEventListener("click", show_all);
+    // selecting page progress row for calculating page progress (page # out of #);
+var $page_progress = document.querySelector("#page_progress");
 
+    // defaul variables
 var page = 1;
 var records_per_page = 50; 
 
@@ -60,7 +63,7 @@ function search_multi(){
             is included in the filteredDataSet array */  
         });
         console.log(filteredDataSet.length);
-        paginate_data(some_data=filteredDataSet, perPageCt = 50, page_num=1);
+        slice_data(some_data=filteredDataSet, perPageCt = 50, page_num=1);
         render_pagination(some_data=filteredDataSet, perPageCt = 50, page_num=1);
     } 
     else { //if length of keys in filteredInputs is == 0
@@ -74,8 +77,9 @@ function search_multi(){
 
 // Function: Show all rows 
 function show_all(){
-    render_pagination(dataSet, perPageCt=500, page_num=1);
-    paginate_data(some_data=dataSet, perPageCt=100, page_num=1);
+    console.log(`Showing all the data: ${dataSet.length} rows in total`);
+    render_pagination(dataSet, perPageCt=500, page_num=1); // default records per page set very high
+    slice_data(some_data=dataSet, perPageCt=500, page_num=1);
 } // end show_all();
 
 
@@ -93,51 +97,48 @@ function render_pagination(some_data, perPageCt=50, page_num=1) { // parameters:
     while($result_page.firstChild){
         $result_page.removeChild($result_page.firstChild);
     }
-
-    var quotient = Math.ceil(some_data.length / perPageCt); // get total # of pages needed to encompass all data.
+     // get total # of pages needed to encompass all data.
+    var last_page = Math.ceil(some_data.length / perPageCt); // rounds up the resulting number;
    
-    for (var i=0; i<quotient; i++) { // create buttons and append under "pagination" <ul>. 
+    for (var i=0; i<last_page; i++) { // create buttons and append under "pagination" <ul>. 
         var newPageLink = document.createElement('button');
         var currentPageNum = i + 1;
         newPageLink.innerText = currentPageNum;
         newPageLink.setAttribute("class", "page_button");
-        newPageLink.setAttribute("id", currentPageNum);
+        newPageLink.setAttribute("id", currentPageNum); // set id at the current page number to easily get page number
         // add event listener for each button
         newPageLink.addEventListener("click", function (){ // to pass multiple functions with custom params
-            var current_button = this.id;
+            var current_button = this.id; // get the current ID, which is the button/page number
             console.log("button clicked: " + current_button);
-            paginate_data(some_data=some_data, perPageCt, page_num=current_button);
+            slice_data(some_data=some_data, perPageCt, page_num=current_button);
+            calc_page_progress(current_page=current_button, end_page=last_page);
         });
         $result_page.appendChild(newPageLink); // append new pagination under the pagination <ul> 
-        
     }   
-     /* add eventListener for each page button 
-    var page_links = $result_page.querySelectorAll(".page_button");
-    for (var i=0; i < page_links.length; i++){
-        // get current number from the button
-        current_page_num = Number(page_links[i].innerText);
-        console.log(current_page_num);
-        // add event listener for each button
-        page_links[i].addEventListener("click", function(){ // to pass multiple functions with custom params
-            paginate_data(some_data=some_data, perPageCt, page_num=current_page_num);
-            //render_pagination(some_data=some_data, perPageCt, page_num=current_page_num);
-        });
-    } 
-    */
+    calc_page_progress(current_page=1, end_page=last_page); // renders the page progress for the first page
 }
 
 // calculate page number, slice data accordingly, and call render_table() on the new data. 
-function paginate_data(some_data, perPageCt=50, page_num=1) { // parameters: object, number of results displayed per page, page number    
+function slice_data(some_data, perPageCt=50, page_num=1) { // parameters: object, number of results displayed per page, page number    
     startIndex = (page_num - 1) * perPageCt; 
     endIndex =  startIndex + perPageCt; 
     
     var slicedArray = some_data.slice(startIndex, endIndex); // Can slice object by index, 
     // but may return [Object{}, Object{}, ...], which could cause problems when passing into render_table 
     render_table(slicedArray); 
-    console.log(page_num);
+    console.log("Current page: " + page_num);
     console.log("start: " + startIndex + "; end: " + endIndex);
 }
 
+// calculate the page progress (page # out of ###). Called by render_pagination()
+function calc_page_progress(current_page, end_page) {
+    // clear the previous page progress
+    $page_progress.removeChild($page_progress.firstChild);
+    // create new paragraph element and let reader know what page they're on
+    var progressElem = document.createElement("p");
+    progressElem.innerHTML = `Page <b>${current_page}</b> out of <b>${end_page}</b>`
+    $page_progress.appendChild(progressElem);
+}
 
 function render_table(some_data){
 /*** calls dataSet from data.js. Loop through and insert rows first ***/ 
@@ -157,11 +158,11 @@ function render_table(some_data){
         var data = some_data[i];
         var row = $table_row.insertRow(i);
         var keys = Object.keys(data) //returns the keys for each "entry" in the object
-        var col_length = keys.length - 1;
+        var col_length = keys.length - 1; //get column length of the end table
         /* loop through columns and sets columns, excluding "durationMinutes" data */
         for (j=0; j<col_length; j++){
             var cell = row.insertCell(j);
-            if (keys[j] != "durationMinutes") {
+            if (keys[j] != "durationMinutes") { // excludes "durationMinutes" variable
                 var data_value = data[keys[j]]; //this is the value of the dataSet at entry number i and key number j 
                 cell.innerText = data_value;
             }

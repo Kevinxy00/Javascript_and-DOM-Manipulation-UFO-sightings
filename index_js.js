@@ -19,6 +19,7 @@ $search_button.addEventListener("click", search_multi);
 $showAll_button.addEventListener("click", show_all);
     // selecting all page progress rows for calculating page progress (page # out of #);
 var $page_progress = document.querySelectorAll("#page_progress");
+var $prev_next_btn = document.querySelectorAll("#prev_next_btn");
 
     // defaul variables
 var page = 1;
@@ -69,7 +70,7 @@ function search_multi(){
     else { //if length of keys in filteredInputs is == 0
         filteredDataSet = [];
         render_table(filteredDataSet);
-        render_pagination(filteredDataSet);
+        render_pagination(some_data=filteredDataSet, perPageCt=0, page_num=0);
     }
 
 } // end of search_multi(); 
@@ -78,7 +79,7 @@ function search_multi(){
 // Function: Show all rows 
 function show_all(){
     console.log(`Showing all the data: ${dataSet.length} rows in total`);
-    render_pagination(dataSet, perPageCt=500, page_num=1); // default records per page set very high
+    render_pagination(some_data=dataSet, perPageCt=500, page_num=1); // default records per page set very high
     slice_data(some_data=dataSet, perPageCt=500, page_num=1);
 } // end show_all();
 
@@ -98,20 +99,28 @@ function render_pagination(some_data, perPageCt=50, page_num=1) { // parameters:
         $result_page.removeChild($result_page.firstChild);
     }
 
-    // set up button for previous page
-    previous_page = document.createElement('button');
-    previous_page.innerText = "Previous";
-    previous_page.setAttribute("class", ".btn-danger");
-    previous_page.setAttribute("id", "previous");
-    // execute function with a click
-    previous_page.addEventListener("click", function (){
+//THIS MAY DO NOTHING
+    // clear all the previous page progress
+    while($page_progress.firstChild){
+        $page_progress.removeChild($page_progress.firstChild);
+        }
 
-    });
+    // clear all the previous page progress
+    for (var i=0; i<$prev_next_btn.length; i++){
+        while ($prev_next_btn.firstChild){
+            $prev_next_btn.removeChild($prev_next_btn.firstChild);
+        }
+    }
 
-     // get total # of pages needed to encompass all data.
-    var last_page = Math.ceil(some_data.length / perPageCt); // rounds up the resulting number;
+    // get total # of pages needed to encompass all data.
+    if (page_num >= 1){ // but only if page number is positive
+        var last_page = Math.ceil(some_data.length / perPageCt); // rounds up the resulting number;
+    } else {
+        var last_page = 0;
+    }
    
-    for (var i=0; i<last_page; i++) { // create buttons and append under "pagination" <ul>. 
+    // FUNCTION: Create buttons and append under "pagination" <ul>. 
+    for (var i=0; i<last_page; i++) { 
         var newPageLink = document.createElement('button');
         var currentPageNum = i + 1;
         newPageLink.innerText = currentPageNum;
@@ -129,8 +138,50 @@ function render_pagination(some_data, perPageCt=50, page_num=1) { // parameters:
         $result_page.appendChild(newPageLink); // append new pagination under the pagination <ul> 
     }   
 
-    calc_page_progress(current_page=1, end_page=last_page); // renders the page progress for the first page
-}
+    // renders the page progress for the first page
+    if (page_num >= 1){
+        calc_page_progress(current_page=1, end_page=last_page); 
+    } 
+    else { // if page = 0, remove all pagination. For aesthetic purposes.
+                // clear the previous page progress
+        for (var i=0; i<$page_progress.length; i++) {
+            while($page_progress[i].firstChild){
+                $page_progress[i].removeChild($page_progress[i].firstChild);
+            }
+        }
+                // clear the previous Previous button
+        for (i=0; i<$prev_next_btn.length; i++) {
+            while ($prev_next_btn[i].firstChild) {
+                $prev_next_btn[i].removeChild($prev_next_btn[i].firstChild);
+            }
+        }
+    }
+
+    // Set up button for previous page
+    // Append a fresh prev button separate from the rest of the pagination
+    for (i=0; i<$prev_next_btn.length; i++) {
+        // clear the previous Previous button
+        while ($prev_next_btn[i].firstChild) {
+            $prev_next_btn[i].removeChild($prev_next_btn[i].firstChild);
+        }
+        previous_page = document.createElement('button');
+        previous_page.innerText = "Previous";
+        previous_page.setAttribute("class", "btn btn-outline-danger");
+        previous_page.setAttribute("id", "previous");
+        // set so that page number is never 0 or negative
+        if (page_num > 0){  
+            // execute function with a click
+            previous_page.addEventListener("click", function (){
+                prev_page_num = page_num - 1
+                console.log("button clicked: Previous");
+                slice_data(some_data=some_data, perPageCt, page_num=prev_page_num);
+                calc_page_progress(current_page=prev_page_num, end_page=last_page);
+                window.scrollTo(0, 0);
+            });
+        } 
+        $prev_next_btn[i].appendChild(previous_page);
+    }
+}     // END render_pagination();
 
 // calculate page number, slice data accordingly, and call render_table() on the new data. 
 function slice_data(some_data, perPageCt=50, page_num=1) { // parameters: object, number of results displayed per page, page number    
@@ -149,7 +200,9 @@ function calc_page_progress(current_page, end_page) {
     // get page progress for each id="page_progress", before & after the alien sightings table; 
     for (var i=0; i<$page_progress.length; i++){
         // clear the previous page progress
-        $page_progress[i].removeChild($page_progress[i].firstChild);
+        while($page_progress[i].firstChild){
+            $page_progress[i].removeChild($page_progress[i].firstChild);
+        }
         // create new paragraph element and let reader know what page they're on
         var progressElem = document.createElement("p");
         progressElem.innerHTML = `Page <b>${current_page}</b> out of <b>${end_page}</b>`

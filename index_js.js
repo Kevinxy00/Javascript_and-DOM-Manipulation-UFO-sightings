@@ -79,13 +79,13 @@ function search_multi(){
             is included in the filteredDataSet array */  
         });
         console.log(filteredDataSet.length);
-        slice_data(some_data=filteredDataSet, perPageCt = $per_page_select, page_num=page1);
         render_pagination(some_data=filteredDataSet, perPageCt = $per_page_select, page_num=page1);
+        slice_data(some_data=filteredDataSet, perPageCt = $per_page_select, page_num=page1);
     } 
     else { //if length of keys in filteredInputs is == 0
         filteredDataSet = [];
-        slice_data(some_data=filteredDataSet, perPageCt = 0, page_num=0);
         render_pagination(some_data=filteredDataSet, perPageCt=0, page_num=0);
+        slice_data(some_data=filteredDataSet, perPageCt = 0, page_num=0);
     }
 
 } // end of search_multi(); 
@@ -95,7 +95,7 @@ function search_multi(){
 function show_all(){
     console.log(`Showing all the data: ${dataSet.length} rows in total`);
     render_pagination(some_data=dataSet, perPageCt=$per_page_select, page_num=page1); // default records per page set very high
-    slice_data(some_data=dataSet, perPageCt=$per_page_select, page_num=page1);
+    slice_data(some_data=dataSet, perPageCt = $per_page_select, page_num=page1);
 } // end show_all();
 
 
@@ -107,20 +107,22 @@ function render_pagination(some_data, perPageCt=50, page_num=page1) { // paramet
     // just making sure the parameters do not default to the default values
     var some_data = some_data;
     var perPageCt = perPageCt;
-    var page_num = Number(page_num);
+    var page_num = Number(page_num); // the page number first inputted. Need this to reset currentPageNum later; 
+
+    // variable to keep track of current page number
+    var currentPageNum = page_num; 
 
     // clear all previous paginations:
     while($result_page.firstChild){
         $result_page.removeChild($result_page.firstChild);
     }
 
-//THIS MAY DO NOTHING; IDK; 
     // clear all the previous page progress
     while($page_progress.firstChild){
         $page_progress.removeChild($page_progress.firstChild);
         }
 
-    // clear all the previous page progress
+    // clear all the previous prev-next buttons
     for (var i=0; i<$prev_next_btn.length; i++){
         while ($prev_next_btn.firstChild){
             $prev_next_btn.removeChild($prev_next_btn.firstChild);
@@ -137,22 +139,25 @@ function render_pagination(some_data, perPageCt=50, page_num=page1) { // paramet
     // FUNCTION: Create buttons and append under "pagination" <ul>. 
     for (var i=0; i<last_page; i++) { 
         var newPageLink = document.createElement('button');
-        var currentPageNum = i + 1;
+        currentPageNum = i + 1;
         newPageLink.innerText = currentPageNum;
         newPageLink.setAttribute("class", "btn btn-outline-danger");
         newPageLink.setAttribute("id", currentPageNum); // set id at the current page number to easily get page number
     //  add event listener for each button
         newPageLink.addEventListener("click", function (){ // on click, execute custom function
             var current_button = this.id; // get the current ID, which is the button/page number
-            current_button = Number(current_button); // turn string into a number b/c javascript is stupid; 
-            console.log("button clicked: " + current_button);
-            slice_data(some_data=some_data, perPageCt, page_num=current_button);
-            calc_page_progress(current_page=current_button, end_page=last_page);
+            currentPageNum = Number(current_button); // turn string into a number b/c javascript is stupid; 
+            console.log("button clicked: " + currentPageNum);
+            slice_data(some_data=some_data, perPageCt, page_num=currentPageNum);
+            calc_page_progress(current_page=currentPageNum, end_page=last_page);
             window.scrollTo(0, 0); // scroll to the top of the window after rendering new table;
         });
 
         $result_page.appendChild(newPageLink); // append new pagination under the pagination <ul> 
     }   
+
+    //reset currentPageNum as the above create pagination button loop increments it to the last page number;
+    currentPageNum = page_num;
 
     // renders the page progress for the first page
     if (page_num >= 1){
@@ -160,6 +165,7 @@ function render_pagination(some_data, perPageCt=50, page_num=page1) { // paramet
     } 
     else { // if page = 0, remove all pagination. For aesthetic purposes.
                 // clear the previous page progress
+                // may be broken
         for (var i=0; i<$page_progress.length; i++) {
             while($page_progress[i].firstChild){
                 $page_progress[i].removeChild($page_progress[i].firstChild);
@@ -188,12 +194,12 @@ function render_pagination(some_data, perPageCt=50, page_num=page1) { // paramet
         // execute function with a click
         previous_page.addEventListener("click", function (){
             // set so that page number is never 0 or negative
-            if (page_num > 0){  
-                prev_page_num = page_num - 1
+            if (currentPageNum > 0){  
+                currentPageNum = currentPageNum - 1
                 console.log("button clicked: Previous");
-                console.log("Page number is now: " + page_num);
-                slice_data(some_data=some_data, perPageCt, page_num=prev_page_num);
-                calc_page_progress(current_page=prev_page_num, end_page=last_page);
+                console.log("Page number is now: " + currentPageNum);
+                slice_data(some_data=some_data, perPageCt, page_num=currentPageNum);
+                calc_page_progress(current_page=currentPageNum, end_page=last_page);
                 window.scrollTo(0, 0);
             }
             else {
@@ -209,19 +215,18 @@ function render_pagination(some_data, perPageCt=50, page_num=page1) { // paramet
         next_page.setAttribute("id", "next");
         // execute function with a click
         next_page.addEventListener("click", function(){ 
-            console.log("Page number: " + page_num);
-            if (page_num < last_page){
-                var next_page_num = page_num + 1;
+            console.log("Page number: " + currentPageNum);
+            if (currentPageNum < last_page){
+                currentPageNum ++;
                 console.log("button clicked: Next");
-                console.log("Page number is now: " + page_num);
-                slice_data(some_data=some_data, perPageCt, page_num=next_page_num);
-                calc_page_progress(current_page=next_page_num, end_page=last_page);
+                console.log("Page number is now: " + currentPageNum);
+                slice_data(some_data=some_data, perPageCt, page_num=currentPageNum);
+                calc_page_progress(current_page=currentPageNum, end_page=last_page);
                 window.scrollTo(0, 0);
                 }
             else {
-                var next_page_num = page_num;
                 console.log("button clicked: Next");
-                console.log("You've reached the last page: " + next_page_num);
+                console.log("You've reached the last page: " + currentPageNum);
             }
         });
         $prev_next_btn[i].appendChild(next_page);
@@ -229,10 +234,10 @@ function render_pagination(some_data, perPageCt=50, page_num=page1) { // paramet
 
 //  When user specifies page number, switch to page number 
     $submit_pageInput.addEventListener("click", function(){ // execute funtion when submit goto page is clicked
-        var input_page_num = Number($input_per_page.value.trim());
-        console.log("user selected page number: " + input_page_num);
-        slice_data(ome_data=some_data, perPageCt, page_num=input_page_num);
-        calc_page_progress(current_page=input_page_num, end_page=last_page);
+        currentPageNum = Number($input_per_page.value.trim());
+        console.log("user selected page number: " + currentPageNum);
+        slice_data(some_data=some_data, perPageCt, page_num=currentPageNum);
+        calc_page_progress(current_page=currentPageNum, end_page=last_page);
     });
 
 } // END render_pagination();
@@ -277,7 +282,7 @@ function render_table(some_data){
     $input_state.value = "";
     $input_country.value = "";
     $input_shape.value = "";
-    $input_per_page.value = "";
+    // note: originally planned to clear goTo page input, but that caused a bug that grabs empty values under some situations 
 
     /* clear any previous table rows */
     while($table_row.firstChild){
@@ -305,11 +310,7 @@ function render_table(some_data){
     }
 }
 
-// scroll up when clicking on footer banner text
-var $botToTop = document.querySelector("#to_top");
-$botToTop.addEventListener("click", function() {
-    window.scrollTo(0, 0);
-});
-
 // Render the first 100 entries from dataSet when first enter page:
 show_all(dataSet, perPageCt=100, page_num=page1);
+slice_data(dataSet, perPageCt = 100, page_num=page1); // Need to start the data slice, rendering the table.
+// Otherwise, current page count gets screwed up and pushed to the last page number. 

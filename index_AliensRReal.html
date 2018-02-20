@@ -38,7 +38,7 @@
             <div class="row">
                 <div class="col-md-2">
                     <label for="search_date">FILTER BY DATE/TIME</label>
-                    <input type="text" class="form-control" id="search_date" placeholder="M/D/YYYY">
+                    <input type="text" class="form-control" id="search_date" placeholder="Format: M/D/YYYY">
                 </div>
                 <div class="col-md-2">
                     <label for="search_city">FILTER BY CITY</label>
@@ -57,6 +57,14 @@
                     <input type="text" class="form-control" id="search_shape" placeholder="light, fireball, circle, etc...">
                 </div>
                 <div class="col-md-2">
+                    <!-- Show all rows button --> 
+                    <div id="showAllBtn_row" class="row">
+                        <div class="col-md-12">
+                            <button id="show_All" type="button">
+                                Show All Rows
+                            </button> 
+                        </div>
+                    </div>
                 </div>
             </div>
             <!-- results per page option -->
@@ -78,43 +86,36 @@
                     <input type="submit" id="submit_search" value="Search">
                 </div>
             </div>
-            <!-- Show all rows button --> 
-            <div id="showAllBtn_row" class="row">
-                <div class="col-md-12">
-                    <button id="show_All" type="button">
-                        Show All Rows
-                    </button> 
-                </div>
-            </div>
         </div>
 
         <!-- banner #2, separating search box section from table section -->
         <div class="row banner">
             <div class="col-md-12">
+                <a class="btn" href="javascript: document.body.scrollIntoView(false);" role="button">
                     <h3 class="banner_text"> Reports of <mark><b> UNIDENTIFIED FLYING OBJECTS</b></mark> 
-                        in the <mark><b> SKIES! </mark></b>   
-                        </br> </br>
-                        <b> TRUST <mark> NO ONE </b> </mark> 
+                        in the <mark><b> SKIES!!</mark></b>  
+                        &emsp;
+                        <b> TRUST <mark> NO ONE!!! </b> </mark> 
                     </h3>
+                </a>
             </div>
         </div>
         
         <!-- table of ALIEN SIGHTINGS!! --> 
-        <div class="row">     <!-- Let user know which page they're on -->
-            <div id="page_progress" class="col-md-12">
+        <div class="row">    
+             <!-- Let user know which page they're on -->
+            <div id="page_progress" class="col-md-2">
             </div>
-        </div>
-        <div class="row">     <!-- page input if users wants to go to a specific page # -->
-            <div class="col-md-1">
+
+            <!-- page input if users wants to go to a specific page # -->
+            <div id="goToPgBtn" class="col-md-1">
                 <label for="goToPage">Go to Page</label>
                 <input type="text" class="form-control" id="goToPage" placeholder="e.g. 1, 2, 3 ...">
-            </div>
-        </div>
-        <div id="goToPgBtn" class="row">
-            <div class="col-md-12">
                 <input type="submit" id="submit_gotoPg" value="Go">
+                
             </div>
         </div>
+        
         <div class="row">     <!-- Previous and Next buttons -->
             <div id="prev_next_btn" class="col-md-12">
             </div>
@@ -125,12 +126,12 @@
                 <table id="main" class="table table-striped">
                     <thead>
                         <tr>
-                            <th><b>date/time</b></th>
-                            <th><b>city</b></th>
-                            <th><b>state</b></th>
-                            <th><b>country</b></th>
-                            <th><b>shape</b></th>
-                            <th><b>comments</b></th>
+                            <th><b>DATE/TIME</b></th>
+                            <th><b>CITY</b></th>
+                            <th><b>STATE</b></th>
+                            <th><b>COUNTRY</b></th>
+                            <th><b>SHAPE</b></th>
+                            <th><b>COMMENTS</b></th>
                         </tr>
                     </thead>
                     <!-- javascript will insert data as <tr> here --> 
@@ -160,7 +161,8 @@
         <!-- footer banner -->
         <div id="footer" class="row">
             <div class="col-md-12">
-                <a id="to_top" href="#top" role="button">
+                <!-- when clicked, scroll to top: scrollIntoView(default) -->
+                <a id="to_top" class="btn" href="javascript: document.body.scrollIntoView();">
                     <h3 class="banner_text"> <b> I <mark>WANT</mark> TO <mark>BELIEVE</mark> </b>
                     </h3>
                 </a>
@@ -172,12 +174,12 @@
     <!-- Just for fun: Xfiles theme link -->
     <div id="xfilesAudio" class="row">
         <div class ="col-md-6">
-            <!-- audio controls autoplay loop -->
-            <audio controls loop>
+            <!-- audio controls autoplay loop  (I am so sorry ... or maybe not!) -->
+            <audio controls autoplay loop>
                 <source src="style/X - Files Theme Full (Illuminati Song).mp3" type="audio/mpeg">
                     your browser does not support Html5
             </audio>
-            <p> (source: 
+            <p>  ( source: 
                 <a href="https://archive.org/details/XFilesThemeFullIlluminatiSong"> 
                     https://archive.org/details/XFilesThemeFullIlluminatiSong
                 </a>

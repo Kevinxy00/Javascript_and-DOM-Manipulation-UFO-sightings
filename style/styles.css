@@ -17,7 +17,16 @@ div.banner {
 }
 
 #showAllBtn_row {
-    padding-top: 15px;
+    padding-top: 35px;
+    padding-left: 50px;
+}
+
+#page_progress{
+    padding-top: 10px;
+}
+
+#goToPgBtn{
+    padding-top: 10px;
     padding-bottom: 20px;
 }
 
@@ -34,6 +43,7 @@ ul.pagination {
 
 #footer {
     background-color: black;
+    text-align: center;
     padding-top: 40px;
     padding-bottom: 20px;
 }

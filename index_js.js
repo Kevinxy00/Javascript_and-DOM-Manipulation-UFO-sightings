@@ -200,7 +200,6 @@ function render_pagination(some_data, perPageCt=50, page_num=page1) { // paramet
                 console.log("Page number is now: " + currentPageNum);
                 slice_data(some_data=some_data, perPageCt, page_num=currentPageNum);
                 calc_page_progress(current_page=currentPageNum, end_page=last_page);
-                window.scrollTo(0, 0);
             }
             else {
             }
@@ -222,7 +221,6 @@ function render_pagination(some_data, perPageCt=50, page_num=page1) { // paramet
                 console.log("Page number is now: " + currentPageNum);
                 slice_data(some_data=some_data, perPageCt, page_num=currentPageNum);
                 calc_page_progress(current_page=currentPageNum, end_page=last_page);
-                window.scrollTo(0, 0);
                 }
             else {
                 console.log("button clicked: Next");

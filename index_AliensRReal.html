@@ -59,6 +59,19 @@
                 <div class="col-md-2">
                 </div>
             </div>
+            <!-- results per page option -->
+            <div class="row">
+                <div class="col-md-12">
+                    <p> </br> Results per page: <p>
+                    <select id="results_per_page">
+                        <option value=10>10</option>
+                        <option value=25>25</option>
+                        <option value=50>50</option>
+                        <option value=100 selected>100</option>
+                        <option value=500>500</option>
+                    </select>
+                </div>
+            </div>
             <!-- regular search button -->
             <div id="searchBtn" class="row">
                 <div class="col-md-12">
@@ -89,6 +102,17 @@
         <!-- table of ALIEN SIGHTINGS!! --> 
         <div class="row">     <!-- Let user know which page they're on -->
             <div id="page_progress" class="col-md-12">
+            </div>
+        </div>
+        <div class="row">     <!-- page input if users wants to go to a specific page # -->
+            <div class="col-md-1">
+                <label for="goToPage">Go to Page</label>
+                <input type="text" class="form-control" id="goToPage" placeholder="e.g. 1, 2, 3 ...">
+            </div>
+        </div>
+        <div id="goToPgBtn" class="row">
+            <div class="col-md-12">
+                <input type="submit" id="submit_gotoPg" value="Go">
             </div>
         </div>
         <div class="row">     <!-- Previous and Next buttons -->
@@ -136,7 +160,7 @@
         <!-- footer banner -->
         <div id="footer" class="row">
             <div class="col-md-12">
-                <a id="to_top" href="#" role="button">
+                <a id="to_top" href="#top" role="button">
                     <h3 class="banner_text"> <b> I <mark>WANT</mark> TO <mark>BELIEVE</mark> </b>
                     </h3>
                 </a>
